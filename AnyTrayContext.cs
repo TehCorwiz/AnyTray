@@ -121,7 +121,18 @@ namespace AnyTray
             while (CommandQueue.Count > 0)
             {
                 string command = CommandQueue.Dequeue();
-                this.AnyTrayIcon.Icon = GenerateSolidIcon(command);
+                switch (command)
+                {
+                    case "exclamation":
+                        this.AnyTrayIcon.Icon = GenerateTextIcon("Red", "!");
+                        break;
+                    case "question":
+                        this.AnyTrayIcon.Icon = GenerateTextIcon("black", "?");
+                        break;
+                    default:
+                        this.AnyTrayIcon.Icon = GenerateSolidIcon(command);
+                        break;
+                }
             }
         }
 
@@ -137,9 +148,29 @@ namespace AnyTray
             Bitmap bmp = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
             using (Graphics g = Graphics.FromImage(bmp))
             {
-                SolidBrush b = new SolidBrush(Color.FromName(color));
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                SolidBrush b = new SolidBrush(Color.FromName(color));
                 g.FillEllipse(b, 4, 4, 28, 28);
+            }
+
+            return Icon.FromHandle(bmp.GetHicon());
+        }
+
+        private Icon GenerateTextIcon(string color, string text)
+        {
+            Bitmap bmp = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                SolidBrush b = new SolidBrush(Color.FromName(color));
+                g.FillEllipse(b, 4, 4, 28, 28);
+
+                Font f = new Font("Consolas", 18);
+                PointF p = new PointF(8, 4);
+                SolidBrush bt = new SolidBrush(Color.White);
+                g.DrawString(text, f, bt, p);
             }
 
             return Icon.FromHandle(bmp.GetHicon());
