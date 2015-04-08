@@ -108,7 +108,7 @@ namespace AnyTray
 
             string recv_val = Encoding.UTF8.GetString(received);
 
-            CommandQueue.Enqueue(recv_val);
+            this.CommandQueue.Enqueue(recv_val);
 
             this.Client.BeginReceive(new AsyncCallback(ReceiveCallback), null);
         }
