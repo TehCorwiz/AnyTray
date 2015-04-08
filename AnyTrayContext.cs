@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -42,12 +43,25 @@ namespace AnyTray
 
         private void InitializeComponent()
         {
+            int UdpPort = GetNextFreeUDPPort();
+
+            if (UdpPort > 0)
+            {
+                this.Client = new UdpClient(UdpPort);
+                this.Client.BeginReceive(new AsyncCallback(ReceiveCallback), null);
+            }
+            else
+            {
+                MessageBox.Show("No free UDP ports available. Do you have permission?");
+                Application.Exit();
+            }
+
             this.AnyTrayIcon = new NotifyIcon();
             this.AnyTrayIcon.Text = "AnyTray Notifier";
 
             this.AnyTrayIcon.BalloonTipIcon = ToolTipIcon.Info;
             this.AnyTrayIcon.BalloonTipTitle = "AnyTray Notifier";
-            this.AnyTrayIcon.BalloonTipText = "Listening on UDP port: {}";
+            this.AnyTrayIcon.BalloonTipText = String.Format("Listening on UDP port: {0}", UdpPort);
 
             this.AnyTrayIcon.Icon = ImageAsIcon(Properties.Resources.blue);
             this.AnyTrayIcon.DoubleClick += AnyTrayIcon_DoubleClick;
@@ -67,9 +81,24 @@ namespace AnyTray
             this.AnyTrayIconContextMenu.ResumeLayout(false);
 
             this.CommandQueue.Enqueued += OnQueuedCommand;
+        }
 
-            this.Client = new UdpClient(1738);
-            this.Client.BeginReceive(new AsyncCallback(ReceiveCallback), null);
+
+        //Based on: http://stackoverflow.com/questions/5879605/udp-port-open-check
+        private int GetNextFreeUDPPort()
+        {
+            var startingAtPort = 1738;
+            var maxNumberOfPortsToCheck = 500;
+            var range = Enumerable.Range(startingAtPort, maxNumberOfPortsToCheck);
+            var portsInUse =
+                from p in range
+                join used in System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners()
+                    on p equals used.Port
+                select p;
+
+            int FirstFreeUDPPortInRange = range.Except(portsInUse).FirstOrDefault();
+
+            return FirstFreeUDPPortInRange;
         }
 
         private void ReceiveCallback(IAsyncResult ar)
