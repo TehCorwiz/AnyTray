@@ -17,6 +17,7 @@ namespace AnyTray
         private ToolStripMenuItem PortMenuItem;
         private ToolStripMenuItem CloseMenuItem;
 
+        private int UdpPort = 0;
         private UdpClient Client;
 
         private EventedQueue<string> CommandQueue = new EventedQueue<string>();
@@ -30,11 +31,11 @@ namespace AnyTray
 
         private void InitializeComponent()
         {
-            int UdpPort = GetNextFreeUDPPort();
+            this.UdpPort = GetNextFreeUDPPort();
 
-            if (UdpPort > 0)
+            if (this.UdpPort > 0)
             {
-                this.Client = new UdpClient(UdpPort);
+                this.Client = new UdpClient(this.UdpPort);
                 this.Client.BeginReceive(new AsyncCallback(ReceiveCallback), null);
             }
             else
@@ -73,8 +74,7 @@ namespace AnyTray
 
         private void PortMenuItem_Click(object sender, EventArgs e)
         {
-            int port = ((IPEndPoint)Client.Client.LocalEndPoint).Port;
-            Clipboard.SetText(port.ToString());
+            Clipboard.SetText(this.UdpPort.ToString());
         }
 
         //Based on: http://stackoverflow.com/questions/5879605/udp-port-open-check
