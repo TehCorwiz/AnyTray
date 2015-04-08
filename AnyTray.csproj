@@ -73,37 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="Resources\black%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\blue%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\cyan%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\exclamation%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\green%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\orange%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\purple%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\question%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\red%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\white%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\yellow%402x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

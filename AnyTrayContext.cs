@@ -14,6 +14,7 @@ namespace AnyTray
     {
         private NotifyIcon AnyTrayIcon;
         private ContextMenuStrip AnyTrayIconContextMenu;
+        private ToolStripMenuItem PortMenuItem;
         private ToolStripMenuItem CloseMenuItem;
 
         private UdpClient Client;
@@ -45,13 +46,13 @@ namespace AnyTray
             // AnyTrayIcon
             this.AnyTrayIcon = new NotifyIcon();
             this.AnyTrayIcon.Text = "AnyTray Notifier";
+            this.AnyTrayIcon.Icon = GenerateSolidIcon("LightGreen");
 
-            this.AnyTrayIcon.BalloonTipIcon = ToolTipIcon.Info;
-            this.AnyTrayIcon.BalloonTipTitle = "AnyTray Notifier";
-            this.AnyTrayIcon.BalloonTipText = String.Format("Listening on UDP port: {0}", UdpPort);
-
-            this.AnyTrayIcon.Icon = GenerateSolidIcon("White");
-            this.AnyTrayIcon.DoubleClick += AnyTrayIcon_DoubleClick;
+            // PortMenuItem
+            this.PortMenuItem = new ToolStripMenuItem();
+            this.PortMenuItem.Name = "PortMenuItem";
+            this.PortMenuItem.Text = String.Format("UDP port {0}", UdpPort);
+            this.PortMenuItem.Click += new EventHandler(this.PortMenuItem_Click);
 
             // CloseMenuItem
             this.CloseMenuItem = new ToolStripMenuItem();
@@ -63,13 +64,18 @@ namespace AnyTray
             this.AnyTrayIconContextMenu = new ContextMenuStrip();
             this.AnyTrayIconContextMenu.SuspendLayout();
             this.AnyTrayIconContextMenu.Name = "TrayIconContextMenu";
-            this.AnyTrayIconContextMenu.Items.AddRange(new ToolStripItem[] { this.CloseMenuItem });
+            this.AnyTrayIconContextMenu.Items.AddRange(new ToolStripItem[] { this.PortMenuItem, this.CloseMenuItem });
             this.AnyTrayIcon.ContextMenuStrip = AnyTrayIconContextMenu;
             this.AnyTrayIconContextMenu.ResumeLayout(false);
 
             this.CommandQueue.Enqueued += OnQueuedCommand;
         }
 
+        private void PortMenuItem_Click(object sender, EventArgs e)
+        {
+            int port = ((IPEndPoint)Client.Client.LocalEndPoint).Port;
+            Clipboard.SetText(port.ToString());
+        }
 
         //Based on: http://stackoverflow.com/questions/5879605/udp-port-open-check
         private int GetNextFreeUDPPort()
@@ -108,11 +114,6 @@ namespace AnyTray
         private void CloseMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        private void AnyTrayIcon_DoubleClick(object sender, EventArgs e)
-        {
-            this.AnyTrayIcon.ShowBalloonTip(10000);
         }
 
         private void OnQueuedCommand(object sender, EventArgs e)
