@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+//Based on: http://stackoverflow.com/questions/531438/c-triggering-an-event-when-an-object-is-added-to-a-queue
 namespace AnyTray
 {
     class EventedQueue<T>

@@ -56,6 +56,7 @@ namespace AnyTray
                 Application.Exit();
             }
 
+            // AnyTrayIcon
             this.AnyTrayIcon = new NotifyIcon();
             this.AnyTrayIcon.Text = "AnyTray Notifier";
 
