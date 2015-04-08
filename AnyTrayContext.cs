@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -18,21 +19,6 @@ namespace AnyTray
         private UdpClient Client;
 
         private EventedQueue<string> CommandQueue = new EventedQueue<string>();
-
-        private List<string> IconChoices = new List<string>
-        {
-            "black",
-            "blue",
-            "cyan",
-            "exclamation",
-            "green",
-            "orange",
-            "purple",
-            "question",
-            "red",
-            "white",
-            "yellow"
-        };
 
         public AnyTrayContext()
         {
@@ -64,7 +50,7 @@ namespace AnyTray
             this.AnyTrayIcon.BalloonTipTitle = "AnyTray Notifier";
             this.AnyTrayIcon.BalloonTipText = String.Format("Listening on UDP port: {0}", UdpPort);
 
-            this.AnyTrayIcon.Icon = ImageAsIcon(Properties.Resources.blue);
+            this.AnyTrayIcon.Icon = GenerateSolidIcon("White");
             this.AnyTrayIcon.DoubleClick += AnyTrayIcon_DoubleClick;
 
             // CloseMenuItem
@@ -134,17 +120,28 @@ namespace AnyTray
             while (CommandQueue.Count > 0)
             {
                 string command = CommandQueue.Dequeue();
-                if (this.IconChoices.Contains(command))
-                {
-                    Image new_icon = (Image)(Properties.Resources.ResourceManager.GetObject(command));
-                    this.AnyTrayIcon.Icon = ImageAsIcon(new_icon);
-                }
+                this.AnyTrayIcon.Icon = GenerateSolidIcon(command);
             }
         }
 
         private void onApplicationExit(object sender, EventArgs e)
         {
             this.AnyTrayIcon.Visible = false;
+        }
+
+        // I don't like this very much, but it's better than embedded fixed value icons.
+        // We'll do better later.
+        private Icon GenerateSolidIcon(string color)
+        {
+            Bitmap bmp = new Bitmap(32, 32, PixelFormat.Format32bppArgb);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                SolidBrush b = new SolidBrush(Color.FromName(color));
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                g.FillEllipse(b, 4, 4, 28, 28);
+            }
+
+            return Icon.FromHandle(bmp.GetHicon());
         }
     }
 }
