@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -89,9 +88,7 @@ namespace AnyTray
                     on p equals used.Port
                 select p;
 
-            int FirstFreeUDPPortInRange = range.Except(portsInUse).FirstOrDefault();
-
-            return FirstFreeUDPPortInRange;
+            return range.Except(portsInUse).FirstOrDefault();
         }
 
         private void ReceiveCallback(IAsyncResult ar)
@@ -104,11 +101,6 @@ namespace AnyTray
             this.CommandQueue.Enqueue(recv_val);
 
             this.Client.BeginReceive(new AsyncCallback(ReceiveCallback), null);
-        }
-
-        private Icon ImageAsIcon(Image input)
-        {
-            return Icon.FromHandle(((Bitmap)input).GetHicon());
         }
 
         private void CloseMenuItem_Click(object sender, EventArgs e)
@@ -169,8 +161,7 @@ namespace AnyTray
 
                 Font f = new Font("Consolas", 18);
                 PointF p = new PointF(8, 4);
-                SolidBrush bt = new SolidBrush(Color.White);
-                g.DrawString(text, f, bt, p);
+                g.DrawString(text, f, Brushes.White, p);
             }
 
             return Icon.FromHandle(bmp.GetHicon());
