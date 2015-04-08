@@ -47,7 +47,7 @@ namespace AnyTray
             // AnyTrayIcon
             this.AnyTrayIcon = new NotifyIcon();
             this.AnyTrayIcon.Text = "AnyTray Notifier";
-            this.AnyTrayIcon.Icon = GenerateSolidIcon("LightGreen");
+            this.AnyTrayIcon.Icon = GenerateSolidIcon("White");
 
             // PortMenuItem
             this.PortMenuItem = new ToolStripMenuItem();
