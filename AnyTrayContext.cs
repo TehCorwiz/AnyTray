@@ -115,11 +115,14 @@ namespace AnyTray
                 string command = CommandQueue.Dequeue();
                 switch (command.ToLower())
                 {
+                    case "quit":
+                        Application.Exit();
+                        break;
                     case "exclamation":
                         this.AnyTrayIcon.Icon = GenerateTextIcon("Red", "!");
                         break;
                     case "question":
-                        this.AnyTrayIcon.Icon = GenerateTextIcon("black", "?");
+                        this.AnyTrayIcon.Icon = GenerateTextIcon("Black", "?");
                         break;
                     default:
                         if (Color.FromName(command).IsKnownColor)
