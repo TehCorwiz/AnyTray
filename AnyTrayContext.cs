@@ -113,7 +113,7 @@ namespace AnyTray
             while (CommandQueue.Count > 0)
             {
                 string command = CommandQueue.Dequeue();
-                switch (command)
+                switch (command.ToLower())
                 {
                     case "exclamation":
                         this.AnyTrayIcon.Icon = GenerateTextIcon("Red", "!");
@@ -122,7 +122,8 @@ namespace AnyTray
                         this.AnyTrayIcon.Icon = GenerateTextIcon("black", "?");
                         break;
                     default:
-                        this.AnyTrayIcon.Icon = GenerateSolidIcon(command);
+                        if (Color.FromName(command).IsKnownColor)
+                            this.AnyTrayIcon.Icon = GenerateSolidIcon(command);
                         break;
                 }
             }
