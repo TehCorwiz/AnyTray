@@ -57,13 +57,13 @@ namespace AnyTray
             // CloseMenuItem
             this.CloseMenuItem = new ToolStripMenuItem();
             this.CloseMenuItem.Name = "CloseMenuItem";
-            this.CloseMenuItem.Text = "Exit AnyTray";
+            this.CloseMenuItem.Text = "Quit";
             this.CloseMenuItem.Click += new EventHandler(this.CloseMenuItem_Click);
 
             // AnyTrayIconContextMenu
             this.AnyTrayIconContextMenu = new ContextMenuStrip();
             this.AnyTrayIconContextMenu.SuspendLayout();
-            this.AnyTrayIconContextMenu.Name = "TrayIconContextMenu";
+            this.AnyTrayIconContextMenu.Name = "AnyTrayIconContextMenu";
             this.AnyTrayIconContextMenu.Items.AddRange(new ToolStripItem[] { this.PortMenuItem, this.CloseMenuItem });
             this.AnyTrayIcon.ContextMenuStrip = AnyTrayIconContextMenu;
             this.AnyTrayIconContextMenu.ResumeLayout(false);
